@@ -1,11 +1,11 @@
 import pickle
-from visualize_test import visualize
-import find_tfl_lights
+from view.visualize import visualize
+from model.find_tfl_lights import find_tfl_lights
 import cv2
 import numpy as np
-import SFM
-from frame_container import FrameContainer
-from create_sample import crop_image
+from model.manage_3d_data import Manage3dData
+from model.frame_container import FrameContainer
+from model.build_dataset import crop_image
 from tensorflow.keras.models import load_model
 
 
@@ -14,7 +14,6 @@ class TFLManager:
     def __init__(self, pkl_path):
         with open(pkl_path, 'rb') as pkl_file:
             self.__pkl_data = pickle.load(pkl_file, encoding='latin1') # open pkl_file and load the data as binary data
-
         self.__pp = self.__pkl_data['principle_point']
         self.__focal = self.__pkl_data['flx']
         self.__prev_frame = None
@@ -22,7 +21,7 @@ class TFLManager:
 
     def on_frame(self, current_frame, frame_index):
         # phase 1
-        candidates, auxliary = self.__get_candidates(current_frame) # get the points that are candidates to be tfl and therir colors
+        candidates, auxliary = self.__get_candidates(current_frame) # get the points that are candidates to be tfls and their colors
         assert len(candidates) == len(auxliary)
         assert len(candidates) >= 0
 
@@ -43,22 +42,20 @@ class TFLManager:
         else:
             distance = None
 
-
         self.__prev_frame = current_frame
-        visualize(current_frame, candidates, auxliary, traffic_lights, traffic_auxliary, distance)
+        return current_frame, candidates, auxliary, traffic_lights, traffic_auxliary, distance
         
-
 
     @staticmethod
     def __get_candidates(image):
         # get the path of image
 
-        x_red, y_red, x_green, y_green = find_tfl_lights.find_tfl_lights(cv2.imread(image))
+        x_red, y_red, x_green, y_green = find_tfl_lights(cv2.imread(image))
         assert len(x_red) == len(y_red)
         assert len(x_green) == len(y_green)
 
         candidates = [[x_red[i], y_red[i]] for i in range(len(x_red))] + [[x_green[i], y_green[i]] for i in range(len(x_green))]
-        auxliary = ["red" for i in x_red] + ["green" for i in x_green]
+        auxliary = ["red" for _ in x_red] + ["green" for _ in x_green]
         
         # candidates[i] is coordinate (x,y) and auxliary[i] represent it's color
         return candidates, auxliary
@@ -81,7 +78,8 @@ class TFLManager:
 
 
     def __get_dists(self, prev_frame, current_frame):
-        SFM.calc_TFL_dist(prev_frame, current_frame, self.__focal, self.__pp)
+        manage3dData = Manage3dData(prev_frame, current_frame, self.__focal, self.__pp)
+        current_frame = manage3dData.calc_TFL_dist()
 
-        return np.array(current_frame.traffic_lights_3d_location)[:, 2] # return array of dists
+        return np.array(current_frame.tfls_3d_location)[:, 2] # return array of dists
 

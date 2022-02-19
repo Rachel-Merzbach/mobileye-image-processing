@@ -31,7 +31,7 @@ def tfl_model():
         model.add(Activation('relu'))
 
     def spatial_layer(count, filters):
-        for i in range(count):
+        for _ in range(count):
             conv_bn_relu(filters, kernel_size=(3, 3))
         conv_bn_relu(filters, kernel_size=(3, 3), strides=(2, 2))
 
@@ -60,7 +60,7 @@ datasets = {
 m.compile(optimizer=Adam(), loss=sparse_categorical_crossentropy, metrics=['accuracy'])
 
 train, val = datasets['train'], datasets['val']
-history = m.fit(train['images'], train['labels'], validation_data=(val['images'], val['labels']), epochs=10)
+m.fit(train['images'], train['labels'], validation_data=(val['images'], val['labels']), epochs=5)
 
 # save the training model
 m.save("model.h5")

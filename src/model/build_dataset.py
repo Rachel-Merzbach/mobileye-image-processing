@@ -2,8 +2,9 @@
 
 import numpy as np
 import os
-from find_tfl_lights import find_tfl_lights
-from image_data import ImagesData
+import matplotlib.pyplot as plt
+from model.find_tfl_lights import find_tfl_lights
+from model.images_data import ImagesData
 
 
 data_root_path = "data_dir/train"
@@ -58,7 +59,7 @@ def crop_image(img: np.ndarray, x: int, y: int):
 
 
 def crop_and_set(x_axis, y_axis, label, img):
-    """crop the image for every suspect (x,y) point """
+    """crop the image for *every* suspect (x,y) point """
     for x, y in zip(x_axis, y_axis):
         cropped_img = crop_image(img, x, y)
         insert_to_data_set(cropped_img, label)
