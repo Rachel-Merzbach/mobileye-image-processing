@@ -45,7 +45,6 @@ class TFLManager:
         self.__prev_frame = current_frame
         return current_frame, candidates, auxliary, traffic_lights, traffic_auxliary, distance
         
-
     @staticmethod
     def __get_candidates(image):
         # get the path of image
@@ -59,7 +58,6 @@ class TFLManager:
         
         # candidates[i] is coordinate (x,y) and auxliary[i] represent it's color
         return candidates, auxliary
-
 
     def __get_tfl_coordinates(self, image, candidates, auxliary):
 
@@ -75,7 +73,6 @@ class TFLManager:
         auxliary = [auxliary[i] for i in range(len(auxliary)) if l_predicted_label[i] == 1]
 
         return traffic_lights, auxliary
-
 
     def __get_dists(self, prev_frame, current_frame):
         manage3dData = Manage3dData(prev_frame, current_frame, self.__focal, self.__pp)

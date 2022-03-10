@@ -6,25 +6,24 @@ import matplotlib.pyplot as plt
 from model.find_tfl_lights import find_tfl_lights
 from model.images_data import ImagesData
 
-
-data_root_path = "data_dir/train"
+ROOT_PATH = "data_dir/train"
 
 
 def insert_to_data_set(image, label):
     """  add data and labels to the files (at first time, create 2 binary files)"""
 
-    with open(f"{data_root_path}/data.bin", "ab") as data_file:
+    with open(f"{ROOT_PATH}/data.bin", "ab") as data_file:
         np.array(image, dtype=np.uint8).tofile(data_file)
-    with open(f"{data_root_path}/labels.bin", "ab") as labels_file:
+    with open(f"{ROOT_PATH}/labels.bin", "ab") as labels_file:
         labels_file.write(label.to_bytes(1, byteorder='big', signed=False))
 
 
 def read_img_and_label(index, crop_size):
     """read the image and label from files using index and crop_size"""
 
-    image = np.memmap(f"{data_root_path}/data.bin",  dtype=np.uint8, mode='r', shape=crop_size,
+    image = np.memmap(f"{ROOT_PATH}/data.bin",  dtype=np.uint8, mode='r', shape=crop_size,
                         offset=crop_size[0]*crop_size[1]*crop_size[2]*index)
-    label = np.memmap(f"{data_root_path}/labels.bin", dtype=np.uint8, mode='r', shape=(1,), offset=index)
+    label = np.memmap(f"{ROOT_PATH}/labels.bin", dtype=np.uint8, mode='r', shape=(1,), offset=index)
     return image, label
 
 

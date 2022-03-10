@@ -51,10 +51,10 @@ m = tfl_model()
 m.summary()
 
 # train the model
-data_dir = r'../data'
+DATA_DIR = r'../data'
 datasets = {
-    'val': load_tfl_data(join(data_dir, 'val')),
-    'train': load_tfl_data(join(data_dir, 'train')),
+    'val': load_tfl_data(join(DATA_DIR, 'val')),
+    'train': load_tfl_data(join(DATA_DIR, 'train')),
 }
 
 m.compile(optimizer=Adam(), loss=sparse_categorical_crossentropy, metrics=['accuracy'])

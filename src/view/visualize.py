@@ -24,7 +24,8 @@ def visualize(current_frame, candidates, auxilary, traffic_lights, traffic_auxil
     if distance is not None:
         phase3.imshow(current_frame.img)
         for i in range(len(distance)):
-            phase3.text(traffic_lights[i][0], traffic_lights[i][1], r'{0:.1f}'.format(distance[i]), color="orange", fontsize=7)
+            phase3.text(traffic_lights[i][0], traffic_lights[i][1], r'{0:.1f}'.format(distance[i]), color="blue", fontsize=7,
+                     bbox=dict(boxstyle="square", facecolor='white', alpha=0.5, edgecolor='white'))
 
     plt.show()
 

@@ -10,11 +10,8 @@ class Manage3dData:
         self.norm_curr_pts = self.normalize(curr_container.traffic_light)
         self.R, self.foe, self.tZ = Manage3dData.decompose(np.array(self.curr_container.EM))
 
-
     def calc_TFL_dist(self):
-        if abs(self.tZ) < 10e-6:
-            print('tz = ', self.tZ)
-        elif self.norm_prev_pts.size == 0:
+        if self.norm_prev_pts.size == 0:
             print('no prev points')
         elif self.norm_curr_pts.size == 0:
             print('no curr points')
@@ -40,7 +37,6 @@ class Manage3dData:
                 corresponding_ind.append(corresponding_p_ind)
 
         return corresponding_ind, np.array(pts_3D), valid_vec
-
 
     def normalize(self, pts):
         pts = np.array(pts)
